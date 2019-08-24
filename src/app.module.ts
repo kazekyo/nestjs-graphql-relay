@@ -8,8 +8,7 @@ import { CatsModule } from './cats/cats.module';
   imports: [
     CatsModule,
     GraphQLModule.forRoot({
-      typePaths: ['./**/*.graphql'],
-      installSubscriptionHandlers: true,
+      autoSchemaFile: 'schema.graphql',
     }),
   ],
   controllers: [AppController],

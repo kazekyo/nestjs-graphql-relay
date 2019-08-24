@@ -1,30 +1,25 @@
-import { ParseIntPipe } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
-import { Cat } from '../graphql.schema';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Cat } from './models/cat';
 import { CatsService } from './cats.service';
-import { CreateCatDto } from './dto/create-cat.dto';
+import { CreateCatInput } from './dto/create-cat.input';
 
-
-@Resolver('Cat')
+@Resolver(of => Cat)
 export class CatsResolvers {
   constructor(private readonly catsService: CatsService) {}
 
-  @Query()
+  @Query(returns => [Cat])
   async getCats() {
     return await this.catsService.findAll();
   }
 
-  @Query('cat')
-  async findOneById(
-    @Args('id', ParseIntPipe)
-    id: number,
-  ): Promise<Cat> {
+  @Query(returns => Cat) // TODO : 名前を元に戻して試す
+  async cat2(@Args('id') id: string): Promise<Cat> {
     return await this.catsService.findOneById(id);
   }
 
-  @Mutation('createCat')
-  async create(@Args('createCatInput') args: CreateCatDto): Promise<Cat> {
-    const createdCat = await this.catsService.create(args);
+  @Mutation(returns => Cat)
+  async createCat(@Args('data') data: CreateCatInput): Promise<Cat> {
+    const createdCat = await this.catsService.create(data);
     return createdCat;
   }
 }

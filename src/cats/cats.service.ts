@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Cat } from '../graphql.schema';
+import { Cat } from './models/cat';
+import { CreateCatInput } from './dto/create-cat.input';
 
 @Injectable()
 export class CatsService {
-  private readonly cats: Cat[] = [{ id: 1, name: 'Cat', age: 5 }];
+  private readonly cats: Cat[] = [{ id: '1', name: 'Cat', age: 5 }];
 
-  create(cat: Cat): Cat {
+  create(data: CreateCatInput): Cat {
+    const cat = { id: 'test', ...data };
     this.cats.push(cat);
     return cat;
   }
@@ -14,7 +16,7 @@ export class CatsService {
     return this.cats;
   }
 
-  findOneById(id: number): Cat {
+  findOneById(id: string): Cat {
     return this.cats.find(cat => cat.id === id);
   }
 }
