@@ -12,11 +12,6 @@ export class CatsResolvers {
     return await this.catsService.findAll();
   }
 
-  @Query(returns => Cat) // TODO : 名前を元に戻して試す
-  async cat2(@Args('id') id: string): Promise<Cat> {
-    return await this.catsService.findOneById(id);
-  }
-
   @Mutation(returns => Cat)
   async createCat(@Args('data') data: CreateCatInput): Promise<Cat> {
     const createdCat = await this.catsService.create(data);

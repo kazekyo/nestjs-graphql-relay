@@ -3,7 +3,7 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-type Cat {
+type Cat implements Node {
   id: ID!
   name: String!
   age: Float!
@@ -18,7 +18,10 @@ type Mutation {
   createCat(data: CreateCatInput!): Cat!
 }
 
+interface Node {
+  id: ID!
+}
+
 type Query {
   getCats: [Cat!]!
-  cat2(id: String!): Cat!
 }

@@ -1,22 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { Cat } from './models/cat';
 import { CreateCatInput } from './dto/create-cat.input';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CatsService {
-  private readonly cats: Cat[] = [{ id: '1', name: 'Cat', age: 5 }];
+  constructor(
+    @InjectRepository(Cat) private readonly catRepository: Repository<Cat>,
+  ) {}
 
-  create(data: CreateCatInput): Cat {
-    const cat = { id: 'test', ...data };
-    this.cats.push(cat);
-    return cat;
+  async create(data: CreateCatInput): Promise<Cat> {
+    const cat = this.catRepository.create(data);
+    return await this.catRepository.save(cat);
   }
 
-  findAll(): Cat[] {
-    return this.cats;
+  async findAll(): Promise<Cat[]> {
+    return this.catRepository.find();
   }
 
-  findOneById(id: string): Cat {
-    return this.cats.find(cat => cat.id === id);
+  async findOneById(internalId: string): Promise<Cat> {
+    return await this.catRepository.findOne(internalId);
   }
 }
