@@ -1,11 +1,17 @@
 # nestjs-graphql-relay
+Example backend server for relay :
 - NestJS 6
-- for Relay
+- Relay Style
   - Identification, Connections
   - using relay-js
 - Code first approach
   - using type-graphql
 - TypeORM
+
+
+## TODO
+- [ ] Relay Connections
+- [ ] Validation
 
 ## Running the app
 
