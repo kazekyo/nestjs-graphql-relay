@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { Node } from '../../nodes/models/node';
+import { Node } from '../../nodes/models/node.model';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { toGlobalId } from 'graphql-relay';
 

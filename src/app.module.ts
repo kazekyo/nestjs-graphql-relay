@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { CatsModule } from './cats/cats.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { NodesModule } from 'src/nodes/nodes.module';
+import { NodesModule } from './nodes/nodes.module';
 
 @Module({
   imports: [
@@ -21,7 +21,7 @@ import { NodesModule } from 'src/nodes/nodes.module';
       password: 'root',
       database: 'test',
       synchronize: true,
-      entities: ['src/*/models/*.ts'],
+      entities: [__dirname + '/**/models/*.model.{js,ts}'],
     }),
   ],
   controllers: [AppController],

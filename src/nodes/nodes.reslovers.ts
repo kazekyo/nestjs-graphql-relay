@@ -1,6 +1,6 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
-import { Node } from './models/node';
-import { CatsService } from 'src/cats/cats.service';
+import { Node } from './models/node.model';
+import { CatsService } from '../cats/cats.service';
 import { fromGlobalId } from 'graphql-relay';
 import { ID } from 'type-graphql';
 

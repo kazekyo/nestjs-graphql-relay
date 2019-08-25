@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { CatsModule } from 'src/cats/cats.module';
-import { NodesResolvers } from 'src/nodes/nodes.reslovers';
+import { CatsModule } from '../cats/cats.module';
+import { NodesResolvers } from './nodes.reslovers';
 
 @Module({
   imports: [CatsModule],
