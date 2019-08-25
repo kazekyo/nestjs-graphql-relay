@@ -5,7 +5,7 @@ import { toGlobalId } from 'graphql-relay';
 
 @Entity()
 @ObjectType({ implements: Node })
-export class Cat {
+export class Cat implements Node {
   @PrimaryGeneratedColumn('uuid')
   internalId: string;
 

@@ -19,7 +19,7 @@ export class CatsService {
     return this.catRepository.find();
   }
 
-  async findOneById(internalId: string): Promise<Cat> {
+  async findOneById(internalId: string): Promise<Cat | undefined> {
     return await this.catRepository.findOne(internalId);
   }
 }
