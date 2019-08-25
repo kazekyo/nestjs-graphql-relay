@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { Node } from '../../node/models/node';
+import { Node } from '../../nodes/models/node';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { toGlobalId } from 'graphql-relay';
 
@@ -9,7 +9,6 @@ export class Cat {
   @PrimaryGeneratedColumn('uuid')
   internalId: string;
 
-  // TODO : add validation
   @Column()
   @Field()
   name: string;

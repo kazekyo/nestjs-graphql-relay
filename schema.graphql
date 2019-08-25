@@ -24,4 +24,5 @@ interface Node {
 
 type Query {
   getCats: [Cat!]!
+  node(id: String!): Node
 }

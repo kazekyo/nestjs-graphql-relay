@@ -4,10 +4,12 @@ import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { CatsModule } from './cats/cats.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { NodesModule } from 'src/nodes/nodes.module';
 
 @Module({
   imports: [
     CatsModule,
+    NodesModule,
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.graphql',
     }),
