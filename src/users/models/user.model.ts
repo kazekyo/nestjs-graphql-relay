@@ -15,6 +15,7 @@ import { Cat } from '../../cats/models/cat.model';
 @Entity()
 @ObjectType({ implements: Node })
 export class User implements Node {
+  // NOTE : I like uuid, but it has nothing to do with the relay specification.
   @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 
