@@ -22,8 +22,10 @@ export class CatsResolvers {
     const parsedUserId = Relay.fromGlobalId(userId);
     const createdCat = await this.catsService.create({
       ...noUserIdData,
-      user: { internalId: parsedUserId.id },
+      user: { id: parsedUserId.id },
     });
-    return { catEdge: { node: createdCat, cursor: `temp:${createdCat.id}` } };
+    return {
+      catEdge: { node: createdCat, cursor: `temp:${createdCat.relayId}` },
+    };
   }
 }

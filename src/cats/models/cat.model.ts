@@ -15,13 +15,13 @@ import { User } from '../../users/models/user.model';
 @Entity()
 @ObjectType({ implements: Node })
 export class Cat implements Node {
-  @Field(type => ID)
-  get id(): string {
-    return toGlobalId('Cat', this.internalId);
-  }
-
   @PrimaryGeneratedColumn('uuid')
-  readonly internalId: string;
+  readonly id: string;
+
+  @Field(type => ID, { name: 'id' })
+  get relayId(): string {
+    return toGlobalId('Cat', this.id);
+  }
 
   @CreateDateColumn()
   readonly createdAt: Date;

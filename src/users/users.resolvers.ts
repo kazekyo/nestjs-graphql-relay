@@ -33,7 +33,7 @@ export class UsersResolvers {
   ): Promise<CreateUserPayload> {
     const createdUser = await this.usersService.create(data);
     return {
-      userEdge: { node: createdUser, cursor: `temp:${createdUser.id}` },
+      userEdge: { node: createdUser, cursor: `temp:${createdUser.relayId}` },
     };
   }
 
@@ -43,7 +43,7 @@ export class UsersResolvers {
     @Args() connArgs: ConnectionArgs,
   ): Promise<Relay.Connection<Cat>> {
     return await this.catsService.findAndPaginate(
-      { user: { internalId: user.internalId } },
+      { user: { id: user.id } },
       connArgs,
     );
   }
