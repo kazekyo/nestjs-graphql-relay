@@ -17,9 +17,9 @@ export class PageInfo implements Relay.PageInfo {
   hasNextPage!: boolean;
   @Field()
   hasPreviousPage!: boolean;
-  @Field()
+  @Field({ nullable: true })
   startCursor?: Relay.ConnectionCursor;
-  @Field()
+  @Field({ nullable: true })
   endCursor?: Relay.ConnectionCursor;
 }
 
