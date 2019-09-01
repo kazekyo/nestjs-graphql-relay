@@ -3,10 +3,14 @@ import { Node } from './models/node.model';
 import { CatsService } from '../cats/cats.service';
 import { fromGlobalId } from 'graphql-relay';
 import { ID } from 'type-graphql';
+import { UsersService } from '../users/users.service';
 
 @Resolver()
 export class NodesResolvers {
-  constructor(private readonly catsService: CatsService) {}
+  constructor(
+    private readonly catsService: CatsService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Query(returns => Node, { nullable: true })
   async node(
@@ -19,6 +23,14 @@ export class NodesResolvers {
     if (!isUUID) {
       return null;
     }
-    return await this.catsService.findOneById(resolvedGlobalId.id);
+    switch (resolvedGlobalId.type) {
+      case 'Cat':
+        return await this.catsService.findOneById(resolvedGlobalId.id);
+      case 'User':
+        return await this.usersService.findOneById(resolvedGlobalId.id);
+      default:
+        break;
+    }
+    return null;
   }
 }

@@ -9,10 +9,6 @@ Example backend server for relay :
 - TypeORM
 
 
-## TODO
-- [ ] Relay Connections
-- [ ] Validation
-
 ## Running the app
 
 ```bash
@@ -24,7 +20,6 @@ $ npm run start
 
 # watch mode
 $ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
+
+Go to `http://localhost:3000/graphql`

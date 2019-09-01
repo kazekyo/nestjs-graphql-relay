@@ -1,5 +1,5 @@
 import { Min, MaxLength } from 'class-validator';
-import { Field, InputType } from 'type-graphql';
+import { Field, InputType, Int } from 'type-graphql';
 
 @InputType()
 export class CreateCatInput {
@@ -7,7 +7,10 @@ export class CreateCatInput {
   @MaxLength(30)
   name: string;
 
-  @Field()
+  @Field(type => Int)
   @Min(1)
   age: number;
+
+  @Field()
+  userId: string;
 }

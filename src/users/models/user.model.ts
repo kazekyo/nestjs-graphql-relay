@@ -6,18 +6,18 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   CreateDateColumn,
-  ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { toGlobalId } from 'graphql-relay';
 import { connectionTypes } from '../../common/connectionPaging';
-import { User } from '../../users/models/user.model';
+import { Cat } from '../../cats/models/cat.model';
 
 @Entity()
 @ObjectType({ implements: Node })
-export class Cat implements Node {
+export class User implements Node {
   @Field(type => ID)
   get id(): string {
-    return toGlobalId('Cat', this.internalId);
+    return toGlobalId('User', this.internalId);
   }
 
   @PrimaryGeneratedColumn('uuid')
@@ -33,13 +33,8 @@ export class Cat implements Node {
   @Field()
   name: string;
 
-  @Column()
-  @Field()
-  age: number;
-
-  @ManyToOne(type => User, user => user.cats)
-  @Field(type => User)
-  user: User;
+  @OneToMany(type => Cat, cat => cat.user)
+  cats: Cat[];
 }
 
-export const { Connection, Edge } = connectionTypes('cat', Cat);
+export const { Edge } = connectionTypes('user', User);

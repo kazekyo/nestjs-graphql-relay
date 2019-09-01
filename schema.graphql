@@ -7,22 +7,87 @@ type Cat implements Node {
   id: ID!
   name: String!
   age: Float!
+  user: User!
+}
+
+type catConnection {
+  pageInfo: PageInfo!
+  edges: [catEdge!]!
+}
+
+type catEdge {
+  node: Cat!
+
+  """Used in `before` and `after` args"""
+  cursor: String!
 }
 
 input CreateCatInput {
   name: String!
-  age: Float!
+  age: Int!
+  userId: String!
+}
+
+type CreateCatPayload {
+  catEdge: catEdge!
+}
+
+input CreateUserInput {
+  name: String!
+}
+
+type CreateUserPayload {
+  userEdge: userEdge!
 }
 
 type Mutation {
-  createCat(data: CreateCatInput!): Cat!
+  createCat(data: CreateCatInput!): CreateCatPayload!
+  createUser(data: CreateUserInput!): CreateUserPayload!
 }
 
 interface Node {
   id: ID!
 }
 
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String!
+  endCursor: String!
+}
+
 type Query {
   getCats: [Cat!]!
   node(id: ID!): Node
+  getUsers: [User!]!
+}
+
+type User implements Node {
+  id: ID!
+  name: String!
+  catsConnection(
+    """Paginate before opaque cursor"""
+    before: String
+
+    """Paginate after opaque cursor"""
+    after: String
+
+    """Paginate first"""
+    first: Int
+
+    """Paginate last"""
+    last: Int
+  ): catConnection!
+}
+
+type userConnection {
+  pageInfo: PageInfo!
+  edges: [userEdge!]!
+}
+
+type userEdge {
+  node: User!
+
+  """Used in `before` and `after` args"""
+  cursor: String!
 }
