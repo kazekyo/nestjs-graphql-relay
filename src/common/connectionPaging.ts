@@ -1,26 +1,26 @@
 import { TypeValue } from 'type-graphql/dist/decorators/types';
-import { ArgsType, Field, ObjectType, Int } from 'type-graphql';
+import { ArgsType, ClassType, Field, Int, ObjectType } from 'type-graphql';
 import * as Relay from 'graphql-relay';
 import {
+  Min,
+  Validate,
+  ValidateIf,
   ValidationArguments,
   ValidatorConstraint,
   ValidatorConstraintInterface,
-  Validate,
-  Min,
-  ValidateIf,
 } from 'class-validator';
 import { FindManyOptions, Repository } from 'typeorm';
 
 @ObjectType()
 export class PageInfo implements Relay.PageInfo {
-  @Field()
-  hasNextPage!: boolean;
-  @Field()
-  hasPreviousPage!: boolean;
-  @Field({ nullable: true })
-  startCursor?: Relay.ConnectionCursor;
-  @Field({ nullable: true })
-  endCursor?: Relay.ConnectionCursor;
+  @Field(type => Boolean, { nullable: true })
+  hasNextPage?: boolean | null;
+  @Field(type => Boolean, { nullable: true })
+  hasPreviousPage?: boolean | null;
+  @Field(type => String, { nullable: true })
+  startCursor?: Relay.ConnectionCursor | null;
+  @Field(type => String, { nullable: true })
+  endCursor?: Relay.ConnectionCursor | null;
 }
 
 @ValidatorConstraint({ async: false })
@@ -82,33 +82,33 @@ export class ConnectionArgs implements Relay.ConnectionArguments {
   last?: number;
 }
 
-export function connectionTypes<T extends TypeValue>(
-  name: string,
-  nodeType: T,
-): { Connection: any; Edge: any } {
-  // TODO : Use Type instead of any(Value)
-  @ObjectType(`${name}Edge`)
-  class Edge implements Relay.Edge<T> {
-    @Field(() => nodeType)
-    node!: T;
+export function EdgeType<TItem>(TItemClass: ClassType<TItem>) {
+  @ObjectType({ isAbstract: true })
+  abstract class Edge implements Relay.Edge<TItem> {
+    @Field(() => TItemClass)
+    node!: TItem;
 
     @Field({ description: 'Used in `before` and `after` args' })
     cursor!: Relay.ConnectionCursor;
   }
 
-  @ObjectType(`${name}Connection`)
-  class Connection implements Relay.Connection<T> {
+  return Edge;
+}
+
+export function ConnectionType<TItem>(
+  TItemClass: ClassType<TItem>,
+  Edge: TypeValue,
+) {
+  @ObjectType({ isAbstract: true })
+  abstract class Connection implements Relay.Connection<TItem> {
     @Field()
     pageInfo!: PageInfo;
 
     @Field(() => [Edge])
-    edges!: Edge[];
+    edges!: Array<Relay.Edge<TItem>>;
   }
 
-  return {
-    Connection,
-    Edge,
-  };
+  return Connection;
 }
 
 type PagingMeta =

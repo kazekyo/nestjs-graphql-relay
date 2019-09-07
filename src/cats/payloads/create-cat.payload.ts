@@ -1,9 +1,8 @@
 import { Field, ObjectType } from 'type-graphql';
-import * as Relay from 'graphql-relay';
-import { Cat, Edge } from '../models/cat.model';
+import { CatEdge } from '../models/cat.model';
 
 @ObjectType()
 export class CreateCatPayload {
-  @Field(type => Edge)
-  catEdge: Relay.Edge<Cat>;
+  @Field(type => CatEdge)
+  catEdge: CatEdge;
 }

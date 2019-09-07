@@ -10,12 +10,12 @@ type Cat implements Node {
   user: User!
 }
 
-type catConnection {
+type CatConnection {
   pageInfo: PageInfo!
-  edges: [catEdge!]!
+  edges: [CatEdge!]!
 }
 
-type catEdge {
+type CatEdge {
   node: Cat!
 
   """Used in `before` and `after` args"""
@@ -29,7 +29,7 @@ input CreateCatInput {
 }
 
 type CreateCatPayload {
-  catEdge: catEdge!
+  catEdge: CatEdge!
 }
 
 input CreateUserInput {
@@ -37,7 +37,7 @@ input CreateUserInput {
 }
 
 type CreateUserPayload {
-  userEdge: userEdge!
+  userEdge: UserEdge!
 }
 
 type Mutation {
@@ -50,8 +50,8 @@ interface Node {
 }
 
 type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
   startCursor: String
   endCursor: String
 }
@@ -77,15 +77,10 @@ type User implements Node {
 
     """Paginate last"""
     last: Int
-  ): catConnection!
+  ): CatConnection!
 }
 
-type userConnection {
-  pageInfo: PageInfo!
-  edges: [userEdge!]!
-}
-
-type userEdge {
+type UserEdge {
   node: User!
 
   """Used in `before` and `after` args"""

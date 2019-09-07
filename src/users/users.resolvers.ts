@@ -12,7 +12,7 @@ import { CreateUserInput } from './dto/create-user.input';
 import { ConnectionArgs } from '../common/connectionPaging';
 import * as Relay from 'graphql-relay';
 import { CreateUserPayload } from './payloads/create-user.payload';
-import { Cat, Connection as CatConnection } from '../cats/models/cat.model';
+import { Cat, CatConnection } from '../cats/models/cat.model';
 import { CatsService } from '../cats/cats.service';
 
 @Resolver(() => User)
@@ -41,7 +41,7 @@ export class UsersResolvers {
   async catsConnection(
     @Parent() user: User,
     @Args() connArgs: ConnectionArgs,
-  ): Promise<Relay.Connection<Cat>> {
+  ): Promise<CatConnection> {
     return await this.catsService.findAndPaginate(
       { user: { id: user.id } },
       connArgs,

@@ -9,7 +9,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { toGlobalId } from 'graphql-relay';
-import { connectionTypes } from '../../common/connectionPaging';
+import { EdgeType } from '../../common/connectionPaging';
 import { Cat } from '../../cats/models/cat.model';
 
 @Entity()
@@ -38,4 +38,5 @@ export class User implements Node {
   cats: Cat[];
 }
 
-export const { Edge } = connectionTypes('user', User);
+@ObjectType()
+export class UserEdge extends EdgeType(User) {}
