@@ -4,6 +4,7 @@ import { CatsService } from '../cats/cats.service';
 import { fromGlobalId } from 'graphql-relay';
 import { ID } from 'type-graphql';
 import { UsersService } from '../users/users.service';
+import { isUUID } from '@nestjs/common/utils/is-uuid';
 
 @Resolver()
 export class NodesResolvers {
@@ -17,10 +18,7 @@ export class NodesResolvers {
     @Args({ name: 'id', type: () => ID }) id: string,
   ): Promise<Node | undefined | null> {
     const resolvedGlobalId = fromGlobalId(id);
-    const isUUID = resolvedGlobalId.id.match(
-      '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
-    );
-    if (!isUUID) {
+    if (!isUUID(resolvedGlobalId.id)) {
       return null;
     }
     switch (resolvedGlobalId.type) {

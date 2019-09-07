@@ -42,6 +42,7 @@ type CreateUserPayload {
 
 type Mutation {
   createCat(data: CreateCatInput!): CreateCatPayload!
+  updateUser(where: UserWhereUniqueInput!, data: UpdateUserInput!): User
   createUser(data: CreateUserInput!): CreateUserPayload!
 }
 
@@ -60,6 +61,10 @@ type Query {
   getCats: [Cat!]!
   node(id: ID!): Node
   getUsers: [User!]!
+}
+
+input UpdateUserInput {
+  name: String!
 }
 
 type User implements Node {
@@ -85,4 +90,8 @@ type UserEdge {
 
   """Used in `before` and `after` args"""
   cursor: String!
+}
+
+input UserWhereUniqueInput {
+  id: ID!
 }

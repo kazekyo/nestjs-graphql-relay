@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Cat } from './models/cat.model';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeepPartial, FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { ConnectionArgs, findAndPaginate } from '../common/connectionPaging';
+import { CreateCatInput } from '../cats/dto/create-cat.input';
+import * as Relay from 'graphql-relay';
 
 @Injectable()
 export class CatsService {
@@ -10,8 +12,13 @@ export class CatsService {
     @InjectRepository(Cat) private readonly catRepository: Repository<Cat>,
   ) {}
 
-  async create(data: DeepPartial<Cat>): Promise<Cat> {
-    const cat = this.catRepository.create(data);
+  async create(data: CreateCatInput): Promise<Cat> {
+    const { userId, ...noUserIdData } = data;
+    const parsedUserId = Relay.fromGlobalId(userId);
+    const cat = this.catRepository.create({
+      ...noUserIdData,
+      user: { id: parsedUserId.id },
+    });
     return await this.catRepository.save(cat);
   }
 

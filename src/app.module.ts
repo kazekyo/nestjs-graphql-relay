@@ -23,6 +23,7 @@ import { UsersModule } from './users/users.module';
       password: 'root',
       database: 'test',
       synchronize: true,
+      charset: 'utf8mb4',
       entities: [__dirname + '/**/models/*.model.{js,ts}'],
     }),
   ],

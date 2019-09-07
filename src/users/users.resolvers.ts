@@ -10,10 +10,11 @@ import { User } from './models/user.model';
 import { UsersService } from './users.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { ConnectionArgs } from '../common/connectionPaging';
-import * as Relay from 'graphql-relay';
 import { CreateUserPayload } from './payloads/create-user.payload';
-import { Cat, CatConnection } from '../cats/models/cat.model';
+import { CatConnection } from '../cats/models/cat.model';
 import { CatsService } from '../cats/cats.service';
+import { UpdateUserInput } from '../users/dto/update-user.input';
+import { UserWhereUniqueInput } from '../users/dto/user-where-unique.input';
 
 @Resolver(() => User)
 export class UsersResolvers {
@@ -27,13 +28,21 @@ export class UsersResolvers {
     return await this.usersService.findAll();
   }
 
+  @Mutation(returns => User, { nullable: true })
+  async updateUser(
+    @Args('data') data: UpdateUserInput,
+    @Args('where') where: UserWhereUniqueInput,
+  ): Promise<User | undefined> {
+    return await this.usersService.update(data, where);
+  }
+
   @Mutation(returns => CreateUserPayload)
   async createUser(
     @Args('data') data: CreateUserInput,
   ): Promise<CreateUserPayload> {
-    const createdUser = await this.usersService.create(data);
+    const user = await this.usersService.create(data);
     return {
-      userEdge: { node: createdUser, cursor: `temp:${createdUser.relayId}` },
+      userEdge: { node: user, cursor: `temp:${user.relayId}` },
     };
   }
 
