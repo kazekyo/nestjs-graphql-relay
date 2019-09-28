@@ -9,12 +9,12 @@ import {
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
 import { CreateUserInput } from './dto/create-user.input';
-import { ConnectionArgs } from '../common/connection-paging';
-import { CreateUserPayload } from './payloads/create-user.payload';
-import { CatConnection } from '../cats/models/cat.model';
+import { CreateUserPayload } from './graphql-types/create-user.payload';
+import { CatConnection } from '../cats/graphql-types/connection-types';
 import { CatsService } from '../cats/cats.service';
 import { UpdateUserInput } from '../users/dto/update-user.input';
 import { UserWhereUniqueInput } from '../users/dto/user-where-unique.input';
+import { CatsConnectionArgs } from '../cats/dto/cats-connection.args';
 
 @Resolver(() => User)
 export class UsersResolvers {
@@ -49,11 +49,13 @@ export class UsersResolvers {
   @ResolveProperty(returns => CatConnection)
   async catsConnection(
     @Parent() user: User,
-    @Args() connArgs: ConnectionArgs,
+    @Args() connectionArgs: CatsConnectionArgs,
   ): Promise<CatConnection> {
+    const { where, orderBy: order, ...args } = connectionArgs;
     return await this.catsService.findAndPaginate(
-      { user: { id: user.id } },
-      connArgs,
+      { ...where, user: { id: user.id } },
+      order,
+      args,
     );
   }
 }

@@ -37,6 +37,3 @@ export class User implements Node {
   @OneToMany(type => Cat, cat => cat.user)
   cats: Cat[];
 }
-
-@ObjectType()
-export class UserEdge extends EdgeType(User) {}

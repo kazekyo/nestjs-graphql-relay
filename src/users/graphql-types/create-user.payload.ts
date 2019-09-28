@@ -1,5 +1,5 @@
 import { Field, ObjectType } from 'type-graphql';
-import { UserEdge } from '../models/user.model';
+import { UserEdge } from './connection-types';
 
 @ObjectType()
 export class CreateUserPayload {

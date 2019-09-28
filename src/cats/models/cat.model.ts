@@ -1,15 +1,14 @@
-import { Field, ID, ObjectType } from 'type-graphql';
+import { Field, GraphQLISODateTime, ID, ObjectType } from 'type-graphql';
 import { Node } from '../../nodes/models/node.model';
 import {
   Column,
+  CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  CreateDateColumn,
-  ManyToOne,
 } from 'typeorm';
 import { toGlobalId } from 'graphql-relay';
-import { ConnectionType, EdgeType } from '../../common/connection-paging';
 import { User } from '../../users/models/user.model';
 
 @Entity()
@@ -18,15 +17,12 @@ export class Cat implements Node {
   @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 
-  @Field(type => ID, { name: 'id' })
-  get relayId(): string {
-    return toGlobalId('Cat', this.id);
-  }
-
   @CreateDateColumn()
+  @Field(type => GraphQLISODateTime)
   readonly createdAt: Date;
 
   @UpdateDateColumn()
+  @Field(type => GraphQLISODateTime)
   readonly updatedAt: Date;
 
   @Column()
@@ -40,10 +36,9 @@ export class Cat implements Node {
   @ManyToOne(type => User, user => user.cats)
   @Field(type => User)
   user: User;
+
+  @Field(type => ID, { name: 'id' })
+  get relayId(): string {
+    return toGlobalId('Cat', this.id);
+  }
 }
-
-@ObjectType()
-export class CatEdge extends EdgeType(Cat) {}
-
-@ObjectType()
-export class CatConnection extends ConnectionType(Cat, CatEdge) {}

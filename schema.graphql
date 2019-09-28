@@ -5,6 +5,8 @@
 
 type Cat implements Node {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   name: String!
   age: Float!
   user: User!
@@ -20,6 +22,15 @@ type CatEdge {
 
   """Used in `before` and `after` args"""
   cursor: String!
+}
+
+input CatOrderByInput {
+  createdAt: OrderByDirection
+  updatedAt: OrderByDirection
+}
+
+input CatWhereInput {
+  name: String
 }
 
 input CreateCatInput {
@@ -40,6 +51,11 @@ type CreateUserPayload {
   userEdge: UserEdge!
 }
 
+"""
+The javascript `Date` as string. Type represents date and time as the ISO Date string.
+"""
+scalar DateTime
+
 type Mutation {
   createCat(data: CreateCatInput!): CreateCatPayload!
   updateUser(where: UserWhereUniqueInput!, data: UpdateUserInput!): User
@@ -48,6 +64,11 @@ type Mutation {
 
 interface Node {
   id: ID!
+}
+
+enum OrderByDirection {
+  ASC
+  DESC
 }
 
 type PageInfo {
@@ -82,6 +103,8 @@ type User implements Node {
 
     """Paginate last"""
     last: Int
+    where: CatWhereInput
+    orderBy: CatOrderByInput
   ): CatConnection!
 }
 

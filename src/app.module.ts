@@ -25,6 +25,7 @@ import { UsersModule } from './users/users.module';
       synchronize: true,
       charset: 'utf8mb4',
       entities: [__dirname + '/**/models/*.model.{js,ts}'],
+      logging: true,
     }),
   ],
   controllers: [AppController],

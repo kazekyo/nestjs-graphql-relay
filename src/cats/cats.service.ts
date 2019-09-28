@@ -32,10 +32,11 @@ export class CatsService {
 
   async findAndPaginate(
     where: FindManyOptions<Cat>['where'],
+    order: FindManyOptions<Cat>['order'],
     connArgs: ConnectionArgs,
   ) {
     return await findAndPaginate(
-      { where, order: { createdAt: 'ASC' } },
+      { where, order },
       connArgs,
       this.catRepository,
     );
