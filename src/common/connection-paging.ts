@@ -128,10 +128,6 @@ function getMeta(args: ConnectionArgs): PagingMeta {
     : { pagingType: 'none' };
 }
 
-const getId = (cursor: Relay.ConnectionCursor) =>
-  parseInt(Relay.fromGlobalId(cursor).id, 10);
-const nextId = (cursor: Relay.ConnectionCursor) => getId(cursor) + 1;
-
 /**
  * Create a 'paging parameters' object with 'limit' and 'offset' fields based on the incoming
  * cursor-paging arguments.
@@ -143,13 +139,13 @@ export function getPagingParameters(args: ConnectionArgs) {
     case 'forward': {
       return {
         limit: meta.first,
-        offset: meta.after ? nextId(meta.after) : 0,
+        offset: meta.after ? Relay.cursorToOffset(meta.after) + 1 : 0,
       };
     }
     case 'backward': {
       const { last, before } = meta;
       let limit = last;
-      let offset = getId(before!) - last;
+      let offset = Relay.cursorToOffset(before!) - last;
 
       // Check to see if our before-page is underflowing past the 0th item
       if (offset < 0) {
