@@ -3,6 +3,10 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type AggregateCat {
+  count: Float!
+}
+
 type Cat implements Node {
   id: ID!
   createdAt: DateTime!
@@ -15,6 +19,7 @@ type Cat implements Node {
 type CatConnection {
   pageInfo: PageInfo!
   edges: [CatEdge!]!
+  aggregate: AggregateCat!
 }
 
 type CatEdge {

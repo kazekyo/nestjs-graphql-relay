@@ -1,4 +1,4 @@
-import { ObjectType } from 'type-graphql';
+import { Field, ObjectType } from 'type-graphql';
 import { ConnectionType, EdgeType } from '../../common/connection-paging';
 import { Cat } from '../models/cat.model';
 
@@ -6,4 +6,13 @@ import { Cat } from '../models/cat.model';
 export class CatEdge extends EdgeType(Cat) {}
 
 @ObjectType()
-export class CatConnection extends ConnectionType(Cat, CatEdge) {}
+class AggregateCat {
+  @Field(type => Number)
+  count: number;
+}
+
+@ObjectType()
+export class CatConnection extends ConnectionType(Cat, CatEdge) {
+  @Field(type => AggregateCat)
+  aggregate: AggregateCat;
+}
