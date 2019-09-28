@@ -53,13 +53,19 @@ class CannotUseWith implements ValidatorConstraintInterface {
 
 @ArgsType()
 export class ConnectionArgs implements Relay.ConnectionArguments {
-  @Field({ nullable: true, description: 'Paginate before opaque cursor' })
+  @Field(type => String, {
+    nullable: true,
+    description: 'Paginate before opaque cursor',
+  })
   @ValidateIf(o => o.before !== undefined)
   @Validate(CannotUseWithout, ['last'])
   @Validate(CannotUseWith, ['after', 'first'])
   before?: Relay.ConnectionCursor;
 
-  @Field({ nullable: true, description: 'Paginate after opaque cursor' })
+  @Field(type => String, {
+    nullable: true,
+    description: 'Paginate after opaque cursor',
+  })
   @ValidateIf(o => o.after !== undefined)
   @Validate(CannotUseWithout, ['first'])
   @Validate(CannotUseWith, ['before', 'last'])
