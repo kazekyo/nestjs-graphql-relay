@@ -9,7 +9,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { toGlobalId } from 'graphql-relay';
-import { ConnectionType, EdgeType } from '../../common/connectionPaging';
+import { ConnectionType, EdgeType } from '../../common/connection-paging';
 import { User } from '../../users/models/user.model';
 
 @Entity()

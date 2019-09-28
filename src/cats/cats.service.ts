@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Cat } from './models/cat.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
-import { ConnectionArgs, findAndPaginate } from '../common/connectionPaging';
+import { ConnectionArgs, findAndPaginate } from '../common/connection-paging';
 import { CreateCatInput } from '../cats/dto/create-cat.input';
 import * as Relay from 'graphql-relay';
 

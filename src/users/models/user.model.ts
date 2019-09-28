@@ -9,7 +9,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { toGlobalId } from 'graphql-relay';
-import { EdgeType } from '../../common/connectionPaging';
+import { EdgeType } from '../../common/connection-paging';
 import { Cat } from '../../cats/models/cat.model';
 
 @Entity()
