@@ -166,7 +166,6 @@ export function getPagingParameters(args: ConnectionArgs) {
   }
 }
 
-// findを使用するPagination
 export async function findAndPaginate<T>(
   condition: FindManyOptions<T>,
   connArgs: ConnectionArgs,
@@ -186,7 +185,6 @@ export async function findAndPaginate<T>(
   return res;
 }
 
-// QueryBuilderを使用するPagination
 export async function getManyAndPaginate<T>(
   queryBuilder: SelectQueryBuilder<T>,
   connArgs: ConnectionArgs,
