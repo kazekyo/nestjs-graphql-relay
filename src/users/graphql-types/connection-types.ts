@@ -1,4 +1,4 @@
-import { ObjectType } from 'type-graphql';
+import { ObjectType } from '@nestjs/graphql';
 import { EdgeType } from '../../common/connection-paging';
 import { User } from '../models/user.model';
 

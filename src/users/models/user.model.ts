@@ -1,16 +1,15 @@
-import { Field, ID, ObjectType } from 'type-graphql';
-import { Node } from '../../nodes/models/node.model';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { toGlobalId } from 'graphql-relay';
 import {
   Column,
+  CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  CreateDateColumn,
-  OneToMany,
 } from 'typeorm';
-import { toGlobalId } from 'graphql-relay';
-import { EdgeType } from '../../common/connection-paging';
 import { Cat } from '../../cats/models/cat.model';
+import { Node } from '../../nodes/models/node.model';
 
 @Entity()
 @ObjectType({ implements: Node })
@@ -19,7 +18,7 @@ export class User implements Node {
   @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 
-  @Field(type => ID, { name: 'id' })
+  @Field((_type) => ID, { name: 'id' })
   get relayId(): string {
     return toGlobalId('User', this.id);
   }
@@ -34,6 +33,6 @@ export class User implements Node {
   @Field()
   name: string;
 
-  @OneToMany(type => Cat, cat => cat.user)
+  @OneToMany((_type) => Cat, (cat) => cat.user)
   cats: Cat[];
 }

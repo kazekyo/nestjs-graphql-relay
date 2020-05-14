@@ -1,10 +1,9 @@
-import { Args, Query, Resolver } from '@nestjs/graphql';
-import { Node } from './models/node.model';
-import { CatsService } from '../cats/cats.service';
-import { fromGlobalId } from 'graphql-relay';
-import { ID } from 'type-graphql';
-import { UsersService } from '../users/users.service';
 import { isUUID } from '@nestjs/common/utils/is-uuid';
+import { Args, ID, Query, Resolver } from '@nestjs/graphql';
+import { fromGlobalId } from 'graphql-relay';
+import { CatsService } from '../cats/cats.service';
+import { UsersService } from '../users/users.service';
+import { Node } from './models/node.model';
 
 @Resolver()
 export class NodesResolvers {
@@ -13,7 +12,7 @@ export class NodesResolvers {
     private readonly usersService: UsersService,
   ) {}
 
-  @Query(returns => Node, { nullable: true })
+  @Query((_returns) => Node, { nullable: true })
   async node(
     @Args({ name: 'id', type: () => ID }) id: string,
   ): Promise<Node | undefined | null> {
