@@ -1,5 +1,5 @@
-import { TypeValue } from 'type-graphql/dist/decorators/types';
-import { ArgsType, ClassType, Field, Int, ObjectType } from 'type-graphql';
+import { ArgsType, Field, Int, ObjectType } from '@nestjs/graphql';
+import { Type } from '@nestjs/common';
 import * as Relay from 'graphql-relay';
 import {
   Min,
@@ -9,17 +9,17 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, Repository, SelectQueryBuilder } from 'typeorm';
 
 @ObjectType()
 export class PageInfo implements Relay.PageInfo {
-  @Field(type => Boolean, { nullable: true })
+  @Field((_type) => Boolean, { nullable: true })
   hasNextPage?: boolean | null;
-  @Field(type => Boolean, { nullable: true })
+  @Field((_type) => Boolean, { nullable: true })
   hasPreviousPage?: boolean | null;
-  @Field(type => String, { nullable: true })
+  @Field((_type) => String, { nullable: true })
   startCursor?: Relay.ConnectionCursor | null;
-  @Field(type => String, { nullable: true })
+  @Field((_type) => String, { nullable: true })
   endCursor?: Relay.ConnectionCursor | null;
 }
 
@@ -40,7 +40,7 @@ class CannotUseWithout implements ValidatorConstraintInterface {
 class CannotUseWith implements ValidatorConstraintInterface {
   validate(value: any, args: ValidationArguments) {
     const object = args.object as any;
-    const result = args.constraints.every(propertyName => {
+    const result = args.constraints.every((propertyName) => {
       return object[propertyName] === undefined;
     });
     return result;
@@ -53,32 +53,32 @@ class CannotUseWith implements ValidatorConstraintInterface {
 
 @ArgsType()
 export class ConnectionArgs implements Relay.ConnectionArguments {
-  @Field(type => String, {
+  @Field((_type) => String, {
     nullable: true,
     description: 'Paginate before opaque cursor',
   })
-  @ValidateIf(o => o.before !== undefined)
+  @ValidateIf((o) => o.before !== undefined)
   @Validate(CannotUseWithout, ['last'])
   @Validate(CannotUseWith, ['after', 'first'])
   before?: Relay.ConnectionCursor;
 
-  @Field(type => String, {
+  @Field((_type) => String, {
     nullable: true,
     description: 'Paginate after opaque cursor',
   })
-  @ValidateIf(o => o.after !== undefined)
+  @ValidateIf((o) => o.after !== undefined)
   @Validate(CannotUseWithout, ['first'])
   @Validate(CannotUseWith, ['before', 'last'])
   after?: Relay.ConnectionCursor;
 
-  @Field(type => Int, { nullable: true, description: 'Paginate first' })
-  @ValidateIf(o => o.first !== undefined)
+  @Field((_type) => Int, { nullable: true, description: 'Paginate first' })
+  @ValidateIf((o) => o.first !== undefined)
   @Min(1)
   @Validate(CannotUseWith, ['before', 'last'])
   first?: number;
 
-  @Field(type => Int, { nullable: true, description: 'Paginate last' })
-  @ValidateIf(o => o.last !== undefined)
+  @Field((_type) => Int, { nullable: true, description: 'Paginate last' })
+  @ValidateIf((o) => o.last !== undefined)
   // Required `before`. This is a weird corner case.
   // We'd have to invert the ordering of query to get the last few items then re-invert it when emitting the results.
   // We'll just ignore it for now.
@@ -88,30 +88,29 @@ export class ConnectionArgs implements Relay.ConnectionArguments {
   last?: number;
 }
 
-export function EdgeType<TItem>(TItemClass: ClassType<TItem>) {
+export function EdgeType<T>(classRef: Type<T>) {
   @ObjectType({ isAbstract: true })
-  abstract class Edge implements Relay.Edge<TItem> {
-    @Field(() => TItemClass)
-    node!: TItem;
+  abstract class Edge implements Relay.Edge<T> {
+    @Field(() => classRef)
+    node: T;
 
-    @Field({ description: 'Used in `before` and `after` args' })
-    cursor!: Relay.ConnectionCursor;
+    @Field((_type) => String, {
+      description: 'Used in `before` and `after` args',
+    })
+    cursor: Relay.ConnectionCursor;
   }
 
   return Edge;
 }
 
-export function ConnectionType<TItem>(
-  TItemClass: ClassType<TItem>,
-  Edge: TypeValue,
-) {
+export function ConnectionType<T>(classRef: Type<T>, Edge: any) {
   @ObjectType({ isAbstract: true })
-  abstract class Connection implements Relay.Connection<TItem> {
+  abstract class Connection implements Relay.Connection<T> {
     @Field()
-    pageInfo!: PageInfo;
+    pageInfo: PageInfo;
 
     @Field(() => [Edge])
-    edges!: Array<Relay.Edge<TItem>>;
+    edges: Array<Relay.Edge<T>>;
   }
 
   return Connection;
@@ -178,6 +177,23 @@ export async function findAndPaginate<T>(
     skip: offset,
     take: limit,
   });
+
+  const res = Relay.connectionFromArraySlice(entities, connArgs, {
+    arrayLength: count,
+    sliceStart: offset || 0,
+  });
+  return res;
+}
+
+export async function getManyAndPaginate<T>(
+  queryBuilder: SelectQueryBuilder<T>,
+  connArgs: ConnectionArgs,
+) {
+  const { limit, offset } = getPagingParameters(connArgs);
+  const [entities, count] = await queryBuilder
+    .offset(offset)
+    .limit(limit)
+    .getManyAndCount();
 
   const res = Relay.connectionFromArraySlice(entities, connArgs, {
     arrayLength: count,

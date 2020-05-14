@@ -1,5 +1,5 @@
 import { Min, MaxLength } from 'class-validator';
-import { Field, InputType, Int } from 'type-graphql';
+import { InputType, Field, Int } from '@nestjs/graphql';
 
 @InputType()
 export class CreateCatInput {
@@ -7,7 +7,7 @@ export class CreateCatInput {
   @MaxLength(30)
   name: string;
 
-  @Field(type => Int)
+  @Field((_type) => Int)
   @Min(1)
   age: number;
 

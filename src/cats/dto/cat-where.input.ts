@@ -1,7 +1,7 @@
-import { Field, InputType } from 'type-graphql';
+import { InputType, Field } from '@nestjs/graphql';
 
 @InputType()
 export class CatWhereInput {
-  @Field(type => String, { nullable: true })
+  @Field((_type) => String, { nullable: true })
   name?: string;
 }

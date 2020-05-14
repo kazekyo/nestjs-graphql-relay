@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Cat } from './models/cat.model';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, Repository } from 'typeorm';
-import { ConnectionArgs, findAndPaginate } from '../common/connection-paging';
-import { CreateCatInput } from '../cats/dto/create-cat.input';
-import * as Relay from 'graphql-relay';
 import { CatConnection } from 'src/cats/graphql-types/connection-types';
+import { FindManyOptions, Repository } from 'typeorm';
+import { CreateCatInput } from '../cats/dto/create-cat.input';
+import { ConnectionArgs, findAndPaginate } from '../common/connection-paging';
+import { Cat } from './models/cat.model';
 
 @Injectable()
 export class CatsService {
@@ -14,11 +13,10 @@ export class CatsService {
   ) {}
 
   async create(data: CreateCatInput): Promise<Cat> {
-    const { userId, ...noUserIdData } = data;
-    const parsedUserId = Relay.fromGlobalId(userId);
+    const { userId, ...restData } = data;
     const cat = this.catRepository.create({
-      ...noUserIdData,
-      user: { id: parsedUserId.id },
+      ...restData,
+      user: { id: userId },
     });
     return await this.catRepository.save(cat);
   }

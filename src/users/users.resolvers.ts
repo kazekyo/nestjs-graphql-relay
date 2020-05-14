@@ -3,18 +3,18 @@ import {
   Mutation,
   Parent,
   Query,
-  ResolveProperty,
+  ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { User } from './models/user.model';
-import { UsersService } from './users.service';
-import { CreateUserInput } from './dto/create-user.input';
-import { CreateUserPayload } from './graphql-types/create-user.payload';
-import { CatConnection } from '../cats/graphql-types/connection-types';
 import { CatsService } from '../cats/cats.service';
+import { CatsConnectionArgs } from '../cats/dto/cats-connection.args';
+import { CatConnection } from '../cats/graphql-types/connection-types';
 import { UpdateUserInput } from '../users/dto/update-user.input';
 import { UserWhereUniqueInput } from '../users/dto/user-where-unique.input';
-import { CatsConnectionArgs } from '../cats/dto/cats-connection.args';
+import { CreateUserInput } from './dto/create-user.input';
+import { CreateUserPayload } from './graphql-types/create-user.payload';
+import { User } from './models/user.model';
+import { UsersService } from './users.service';
 
 @Resolver(() => User)
 export class UsersResolvers {
@@ -23,12 +23,12 @@ export class UsersResolvers {
     private readonly catsService: CatsService,
   ) {}
 
-  @Query(returns => [User])
+  @Query((_returns) => [User])
   async getUsers() {
     return await this.usersService.findAll();
   }
 
-  @Mutation(returns => User, { nullable: true })
+  @Mutation((_returns) => User, { nullable: true })
   async updateUser(
     @Args('data') data: UpdateUserInput,
     @Args('where') where: UserWhereUniqueInput,
@@ -36,7 +36,7 @@ export class UsersResolvers {
     return await this.usersService.update(data, where);
   }
 
-  @Mutation(returns => CreateUserPayload)
+  @Mutation((_returns) => CreateUserPayload)
   async createUser(
     @Args('data') data: CreateUserInput,
   ): Promise<CreateUserPayload> {
@@ -46,7 +46,7 @@ export class UsersResolvers {
     };
   }
 
-  @ResolveProperty(returns => CatConnection)
+  @ResolveField((_returns) => CatConnection)
   async catsConnection(
     @Parent() user: User,
     @Args() connectionArgs: CatsConnectionArgs,

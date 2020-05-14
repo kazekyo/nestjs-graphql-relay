@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { User } from './models/user.model';
-import { CreateUserInput } from './dto/create-user.input';
+import { isUUID } from '@nestjs/common/utils/is-uuid';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as Relay from 'graphql-relay';
 import { Repository } from 'typeorm';
 import { UpdateUserInput } from '../users/dto/update-user.input';
 import { UserWhereUniqueInput } from '../users/dto/user-where-unique.input';
-import * as Relay from 'graphql-relay';
-import { isUUID } from '@nestjs/common/utils/is-uuid';
+import { CreateUserInput } from './dto/create-user.input';
+import { User } from './models/user.model';
 
 @Injectable()
 export class UsersService {
@@ -31,7 +31,8 @@ export class UsersService {
     if (!user) {
       return user;
     }
-    return await this.userRepository.save({ ...user, ...data });
+    this.userRepository.merge(user, data);
+    return await this.userRepository.save(user);
   }
 
   async findAll(): Promise<User[]> {

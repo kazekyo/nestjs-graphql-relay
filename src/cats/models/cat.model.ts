@@ -1,5 +1,5 @@
-import { Field, GraphQLISODateTime, ID, ObjectType } from 'type-graphql';
-import { Node } from '../../nodes/models/node.model';
+import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
+import { toGlobalId } from 'graphql-relay';
 import {
   Column,
   CreateDateColumn,
@@ -7,8 +7,9 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  RelationId,
 } from 'typeorm';
-import { toGlobalId } from 'graphql-relay';
+import { Node } from '../../nodes/models/node.model';
 import { User } from '../../users/models/user.model';
 
 @Entity()
@@ -18,11 +19,11 @@ export class Cat implements Node {
   readonly id: string;
 
   @CreateDateColumn()
-  @Field(type => GraphQLISODateTime)
+  @Field((_type) => GraphQLISODateTime)
   readonly createdAt: Date;
 
   @UpdateDateColumn()
-  @Field(type => GraphQLISODateTime)
+  @Field((_type) => GraphQLISODateTime)
   readonly updatedAt: Date;
 
   @Column()
@@ -33,11 +34,13 @@ export class Cat implements Node {
   @Field()
   age: number;
 
-  @ManyToOne(type => User, user => user.cats)
-  @Field(type => User)
+  @ManyToOne((_type) => User, (user) => user.cats)
   user: User;
 
-  @Field(type => ID, { name: 'id' })
+  @RelationId((cat: Cat) => cat.user)
+  userId: string;
+
+  @Field((_type) => ID, { name: 'id' })
   get relayId(): string {
     return toGlobalId('Cat', this.id);
   }

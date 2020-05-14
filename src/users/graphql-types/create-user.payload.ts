@@ -1,8 +1,8 @@
-import { Field, ObjectType } from 'type-graphql';
+import { ObjectType, Field } from '@nestjs/graphql';
 import { UserEdge } from './connection-types';
 
 @ObjectType()
 export class CreateUserPayload {
-  @Field(type => UserEdge)
+  @Field((_type) => UserEdge)
   userEdge: UserEdge;
 }

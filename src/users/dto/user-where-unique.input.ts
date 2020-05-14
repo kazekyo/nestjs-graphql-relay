@@ -1,7 +1,7 @@
-import { Field, ID, InputType } from 'type-graphql';
+import { InputType, Field, ID } from '@nestjs/graphql';
 
 @InputType()
 export class UserWhereUniqueInput {
-  @Field(type => ID)
+  @Field((_type) => ID)
   id: string;
 }
